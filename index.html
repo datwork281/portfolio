@@ -3,180 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lương Tiến Đạt - Portfolio</title>
+    <title>Lương Tiến Đạt - Portfolio Playlist</title>
     <style>
+        /* --- 1. BIẾN MÀU SẮC (THEME ÂM NHẠC TỐI) --- */
         :root {
-            --bg-color: #0d0f12;
-            --card-bg: #1a1d24;
+            --bg-main: #121212;
+            --bg-elevated: #181818;
+            --bg-hover: #282828;
             --text-main: #ffffff;
-            --text-dim: #8b949e;
-            --accent: #e2e8f0;
+            --text-sub: #b3b3b3;
+            --accent: #1ed760; /* Màu xanh Spotify, có thể đổi thành màu bạn thích */
+            --divider: #ffffff1a;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 40px 20px;
+            padding: 0 0 90px 0; /* Chừa khoảng trống dưới cùng cho thanh Now Playing */
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- 2. HEADER: ARTIST PROFILE --- */
+        .artist-header {
+            position: relative;
+            padding: 80px 40px 40px 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?q=80&w=2000&auto=format&fit=crop') center/cover;
             display: flex;
-            justify-content: center;
+            align-items: flex-end;
+            gap: 24px;
         }
 
-        /* Lưới Bento */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .bento-card {
-            background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            border: 1px solid #2d3139;
-        }
-
-        .bento-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Khối Profile chiếm 2 cột */
-        .profile-card {
-            grid-column: span 2;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
+        .artist-avatar {
+            width: 192px;
+            height: 192px;
             border-radius: 50%;
+            box-shadow: 0 4px 60px rgba(0,0,0,0.5);
             object-fit: cover;
         }
 
-        .name {
-            margin: 0 0 5px 0;
-            font-size: 32px;
-            letter-spacing: -1px;
-        }
-
-        .title {
-            color: var(--text-dim);
-            margin: 0;
-            font-size: 16px;
-        }
-
-        /* Khối Âm nhạc (Spinning Record) */
-        .music-card {
+        .artist-info {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
         }
 
-        .record {
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #1a1d24 15%, #000000 16%, #222 20%, #000 24%, #222 28%, #000 100%);
-            border-radius: 50%;
-            animation: spin 4s linear infinite;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Khối Sách */
-        .book-card {
-            grid-column: span 1;
+        .verified {
             display: flex;
-            gap: 15px;
             align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .verified-badge { color: #3d91f4; font-size: 18px; }
+
+        .artist-name {
+            font-size: 80px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: -2px;
         }
 
-        .book-cover {
-            width: 80px;
-            height: 120px;
-            background-color: #333; /* Thay bằng ảnh bìa sách */
-            border-radius: 4px;
-            box-shadow: -3px 0 10px rgba(0,0,0,0.5);
-            background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=300&auto=format&fit=crop');
-            background-size: cover;
+        .artist-bio {
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 500;
         }
 
-        .book-info h3 { margin: 0 0 5px 0; font-size: 16px; }
-        .book-info p { margin: 0; font-size: 14px; color: var(--text-dim); }
+        /* Nút Play to đùng (Xem Showreel) */
+        .action-bar {
+            padding: 24px 40px;
+            display: flex;
+            align-items: center;
+            background-image: linear-gradient(rgba(0,0,0,0.2) 0%, var(--bg-main) 100%);
+        }
+
+        .btn-play-main {
+            width: 56px;
+            height: 56px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+        .btn-play-main:hover { transform: scale(1.05); background-color: #1fdf64; }
+        .btn-play-main svg { width: 24px; height: 24px; fill: black; margin-left: 4px; }
+
+        /* --- 3. TRACKLIST (DANH SÁCH DỰ ÁN) --- */
+        .tracklist {
+            padding: 0 40px;
+            max-width: 1200px;
+        }
+
+        .track-header {
+            display: grid;
+            grid-template-columns: 50px minmax(200px, 1fr) 200px 100px;
+            padding: 10px 16px;
+            color: var(--text-sub);
+            font-size: 13px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--divider);
+            margin-bottom: 16px;
+        }
+
+        .track {
+            display: grid;
+            grid-template-columns: 50px minmax(200px, 1fr) 200px 100px;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .track:hover { background-color: var(--bg-hover); }
+        .track:hover .track-num { display: none; }
+        .track:hover .track-play { display: block; }
+
+        .track-num-col { color: var(--text-sub); font-size: 16px; text-align: center; }
+        .track-play { display: none; color: var(--text-main); font-size: 18px; }
+
+        .track-title-col { display: flex; align-items: center; gap: 16px; }
+        .track-thumb { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background-color: #333; }
         
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #2d3139;
-            border-radius: 3px;
-            margin-top: 15px;
-        }
-        .progress {
-            width: 60%; /* Tỉ lệ đọc */
-            height: 100%;
-            background: var(--text-main);
-            border-radius: 3px;
+        .track-title { font-size: 16px; font-weight: 500; margin: 0 0 4px 0; color: var(--text-main); }
+        .track-brand { font-size: 14px; color: var(--text-sub); margin: 0; }
+
+        .track-role { color: var(--text-sub); font-size: 14px; }
+        .track-duration { color: var(--text-sub); font-size: 14px; text-align: right; }
+
+        /* --- 4. THANH NOW PLAYING (DƯỚI CÙNG) --- */
+        .now-playing {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%; height: 90px;
+            background-color: var(--bg-elevated);
+            border-top: 1px solid var(--divider);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 1000;
         }
 
-        /* Responsive cho Mobile */
+        .np-info { display: flex; align-items: center; gap: 15px; width: 30%; }
+        .np-thumb { width: 56px; height: 56px; border-radius: 4px; object-fit: cover; }
+        .np-text h4 { margin: 0 0 4px 0; font-size: 14px; }
+        .np-text p { margin: 0; font-size: 12px; color: var(--text-sub); }
+
+        .np-controls { flex-grow: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .np-play-btn { background: white; color: black; border: none; border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; }
+        .np-progress { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 400px; font-size: 12px; color: var(--text-sub); }
+        .progress-bar { flex-grow: 1; height: 4px; background: #4d4d4d; border-radius: 2px; }
+        .progress-fill { width: 30%; height: 100%; background: var(--text-main); border-radius: 2px; }
+
+        /* --- 5. POPUP XEM VIDEO --- */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center;
+        }
+        .modal-content { width: 80%; max-width: 900px; background: #000; aspect-ratio: 16/9; position: relative; }
+        .close-modal { position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .bento-grid {
-                grid-template-columns: 1fr;
-            }
-            .profile-card {
-                grid-column: span 1;
-                flex-direction: column;
-                text-align: center;
-            }
+            .artist-header { flex-direction: column; align-items: center; text-align: center; padding: 40px 20px 20px 20px; }
+            .artist-name { font-size: 40px; }
+            .track-header, .track { grid-template-columns: 40px 1fr; } /* Ẩn cột Role và Duration trên điện thoại */
+            .track-header span:nth-child(3), .track-header span:nth-child(4), 
+            .track-role, .track-duration { display: none; }
+            .np-info { width: 60%; }
+            .np-progress { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bento-grid">
-        <!-- Khối 1: Profile -->
-        <div class="bento-card profile-card">
-            <!-- Đổi link ảnh avatar của bạn vào đây -->
-            <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?q=80&w=500&auto=format&fit=crop" class="avatar" alt="Avatar">
-            <div>
-                <h1 class="name">Lương Tiến Đạt</h1>
-                <p class="title">Video Editor & Media Executive</p>
-                <p class="title" style="margin-top: 10px; font-size: 14px;">Chuyên xử lý hậu kỳ, làm chủ khung hình và kể chuyện qua nhịp điệu.</p>
+    <!-- PHẦN 1: ARTIST HEADER -->
+    <header class="artist-header">
+        <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?q=80&w=500&auto=format&fit=crop" class="artist-avatar" alt="Avatar">
+        <div class="artist-info">
+            <div class="verified">
+                <span class="verified-badge">✔</span> Verified Professional
             </div>
+            <h1 class="artist-name">Lương Tiến Đạt</h1>
+            <div class="artist-bio">Video Editor • Media Executive • 1,000,000+ Render Hours</div>
+        </div>
+    </header>
+
+    <!-- Nút Play Showreel -->
+    <div class="action-bar">
+        <button class="btn-play-main" title="Play Showreel" onclick="playVideo('Showreel 2025', 'Video Editor', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <!-- Icon Play -->
+            <svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>
+        </button>
+    </div>
+
+    <!-- PHẦN 2: TRACKLIST (DANH SÁCH DỰ ÁN) -->
+    <div class="tracklist">
+        <h2>Popular Tracks</h2>
+        
+        <div class="track-header">
+            <span style="text-align: center;">#</span>
+            <span>Title</span>
+            <span>Role</span>
+            <span style="text-align: right;">Year</span>
         </div>
 
-        <!-- Khối 2: Âm nhạc -->
-        <div class="bento-card music-card">
-            <div class="record"></div>
-            <div class="book-info">
-                <h3>On Repeat</h3>
-                <p>Tên bài hát - Nghệ sĩ</p>
+        <!-- TRACK 1 -->
+        <!-- Để thay video, đổi link youtube trong thẻ onclick bên dưới. Lưu ý: link phải có chữ /embed/ -->
+        <div class="track" onclick="playVideo('Dr.PONG x Coolmate', 'Commercial Campaign', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <div class="track-num-col">
+                <span class="track-num">1</span>
+                <span class="track-play">▶</span>
             </div>
+            <div class="track-title-col">
+                <!-- Đổi ảnh thumbnail của dự án vào src -->
+                <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=100&auto=format&fit=crop" class="track-thumb">
+                <div>
+                    <h3 class="track-title">Dr.PONG x Coolmate</h3>
+                    <p class="track-brand">Commercial Campaign</p>
+                </div>
+            </div>
+            <div class="track-role">Offline Edit, Color Grading</div>
+            <div class="track-duration">2026</div>
         </div>
 
-        <!-- Khối 3: Sách -->
-        <div class="bento-card book-card">
-            <div class="book-cover"></div>
-            <div class="book-info">
-                <h3>Currently Reading</h3>
-                <p>Tên cuốn sách</p>
-                <div class="progress-bar"><div class="progress"></div></div>
-                <p style="font-size: 12px; margin-top: 5px;">60% hoàn thành</p>
+        <!-- TRACK 2 -->
+        <div class="track" onclick="playVideo('Cinematic Street Photography', 'Personal Project', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <div class="track-num-col">
+                <span class="track-num">2</span>
+                <span class="track-play">▶</span>
+            </div>
+            <div class="track-title-col">
+                <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=100&auto=format&fit=crop" class="track-thumb">
+                <div>
+                    <h3 class="track-title">Cinematic Street Photography</h3>
+                    <p class="track-brand">Personal Project</p>
+                </div>
+            </div>
+            <div class="track-role">Directing, Grading</div>
+            <div class="track-duration">2026</div>
+        </div>
+
+        <!-- TRACK 3 -->
+        <div class="track" onclick="playVideo('ComfyUI & Stable Diffusion', 'AI Workflow Test', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <div class="track-num-col">
+                <span class="track-num">3</span>
+                <span class="track-play">▶</span>
+            </div>
+            <div class="track-title-col">
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=100&auto=format&fit=crop" class="track-thumb">
+                <div>
+                    <h3 class="track-title">ComfyUI & Stable Diffusion</h3>
+                    <p class="track-brand">AI Workflow Test</p>
+                </div>
+            </div>
+            <div class="track-role">Generative AI, Compositing</div>
+            <div class="track-duration">2026</div>
+        </div>
+    </div>
+
+    <!-- PHẦN 3: THANH NOW PLAYING -->
+    <div class="now-playing">
+        <div class="np-info">
+            <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?q=80&w=100&auto=format&fit=crop" class="np-thumb" id="np-thumb">
+            <div class="np-text">
+                <h4 id="np-title">Showreel 2025</h4>
+                <p id="np-desc">Video Editor</p>
+            </div>
+        </div>
+        <div class="np-controls">
+            <button class="np-play-btn" onclick="openModal()">▶</button>
+            <div class="np-progress">
+                <span>0:00</span>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+                <span>Ví dụ</span>
             </div>
         </div>
     </div>
+
+    <!-- PHẦN 4: POPUP VIDEO PLAYER -->
+    <div id="videoModal" class="modal" onclick="closeOutside(event)">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <iframe id="videoPlayer" src="" allow="autoplay; fullscreen"></iframe>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: Điều khiển logic bật video và cập nhật thanh Now Playing -->
+    <script>
+        function playVideo(title, desc, videoUrl) {
+            // Cập nhật thông tin dưới thanh Now Playing
+            document.getElementById('np-title').innerText = title;
+            document.getElementById('np-desc').innerText = desc;
+            
+            // Cập nhật link video vào iframe và bật tự động chạy (?autoplay=1)
+            let embedUrl = videoUrl + "?autoplay=1";
+            document.getElementById('videoPlayer').src = embedUrl;
+            
+            // Mở Popup
+            openModal();
+        }
+
+        function openModal() {
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            // Tắt video khi đóng popup
+            document.getElementById('videoPlayer').src = "";
+        }
+
+        function closeOutside(event) {
+            if (event.target.id === 'videoModal') {
+                closeModal();
+            }
+        }
+    </script>
 
 </body>
 </html>
