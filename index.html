@@ -5,115 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lương Tiến Đạt - Portfolio</title>
     <style>
-        /* Cài đặt màu sắc và font chữ mặc định */
         :root {
-            --bg-dark: #0f1115;       /* Màu nền tối chính */
-            --text-main: #ffffff;     /* Màu chữ chính */
-            --text-muted: #8b949e;    /* Màu chữ phụ (chức danh) */
-            --border-color: #30363d;  /* Màu viền */
+            --bg-color: #0d0f12;
+            --card-bg: #1a1d24;
+            --text-main: #ffffff;
+            --text-dim: #8b949e;
+            --accent: #e2e8f0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
         }
 
-        /* Vùng chứa toàn bộ nội dung, căn giữa màn hình */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            border-left: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            min-height: 100vh;
-        }
-
-        /* Banner ngang */
-        .banner {
+        /* Lưới Bento */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
             width: 100%;
-            height: 220px;
-            /* Ảnh banner tạm thời - bạn có thể thay link ảnh khác vào url() */
-            background-image: url('https://images.unsplash.com/photo-1604079628040-94301bb21b91?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
         }
 
-        /* Khu vực thông tin cá nhân */
-        .profile-section {
-            padding: 0 20px 20px 20px;
-            position: relative;
-            border-bottom: 1px solid var(--border-color);
+        .bento-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            border: 1px solid #2d3139;
         }
 
-        /* Avatar tròn, đè lên banner */
+        .bento-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Khối Profile chiếm 2 cột */
+        .profile-card {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
         .avatar {
-            width: 130px;
-            height: 130px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 4px solid var(--bg-dark); /* Tạo viền trùng màu nền để cắt banner */
-            background-color: #1a1d24;
-            margin-top: -65px; /* Kéo avatar lên trên banner một nửa */
             object-fit: cover;
-            position: relative;
         }
 
-        /* Tên và chức danh */
         .name {
-            margin: 12px 0 4px 0;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            margin: 0 0 5px 0;
+            font-size: 32px;
+            letter-spacing: -1px;
         }
 
         .title {
+            color: var(--text-dim);
             margin: 0;
             font-size: 16px;
-            color: var(--text-muted);
-            font-weight: 400;
         }
 
-        /* Tối ưu riêng cho màn hình điện thoại (Mobile) */
-        @media (max-width: 600px) {
-            .container {
-                border-left: none;
-                border-right: none;
+        /* Khối Âm nhạc (Spinning Record) */
+        .music-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .record {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #1a1d24 15%, #000000 16%, #222 20%, #000 24%, #222 28%, #000 100%);
+            border-radius: 50%;
+            animation: spin 4s linear infinite;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Khối Sách */
+        .book-card {
+            grid-column: span 1;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .book-cover {
+            width: 80px;
+            height: 120px;
+            background-color: #333; /* Thay bằng ảnh bìa sách */
+            border-radius: 4px;
+            box-shadow: -3px 0 10px rgba(0,0,0,0.5);
+            background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=300&auto=format&fit=crop');
+            background-size: cover;
+        }
+
+        .book-info h3 { margin: 0 0 5px 0; font-size: 16px; }
+        .book-info p { margin: 0; font-size: 14px; color: var(--text-dim); }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #2d3139;
+            border-radius: 3px;
+            margin-top: 15px;
+        }
+        .progress {
+            width: 60%; /* Tỉ lệ đọc */
+            height: 100%;
+            background: var(--text-main);
+            border-radius: 3px;
+        }
+
+        /* Responsive cho Mobile */
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
             }
-            .banner {
-                height: 150px;
-            }
-            .avatar {
-                width: 100px;
-                height: 100px;
-                margin-top: -50px;
-            }
-            .name {
-                font-size: 22px;
-            }
-            .title {
-                font-size: 15px;
+            .profile-card {
+                grid-column: span 1;
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Phần Header Mạng Xã Hội -->
-        <header>
-            <div class="banner"></div>
-            <div class="profile-section">
-                <!-- Thay link trong src="" bằng link ảnh avatar của bạn -->
-                <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?q=80&w=500&auto=format&fit=crop" alt="Avatar" class="avatar">
-                
+    <div class="bento-grid">
+        <!-- Khối 1: Profile -->
+        <div class="bento-card profile-card">
+            <!-- Đổi link ảnh avatar của bạn vào đây -->
+            <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?q=80&w=500&auto=format&fit=crop" class="avatar" alt="Avatar">
+            <div>
                 <h1 class="name">Lương Tiến Đạt</h1>
-                <h2 class="title">Video Editor & Media Executive</h2>
+                <p class="title">Video Editor & Media Executive</p>
+                <p class="title" style="margin-top: 10px; font-size: 14px;">Chuyên xử lý hậu kỳ, làm chủ khung hình và kể chuyện qua nhịp điệu.</p>
             </div>
-        </header>
+        </div>
 
-        <!-- Các nội dung bổ sung (Portfolio, Phim) sẽ được thêm vào bên dưới dòng này -->
+        <!-- Khối 2: Âm nhạc -->
+        <div class="bento-card music-card">
+            <div class="record"></div>
+            <div class="book-info">
+                <h3>On Repeat</h3>
+                <p>Tên bài hát - Nghệ sĩ</p>
+            </div>
+        </div>
 
+        <!-- Khối 3: Sách -->
+        <div class="bento-card book-card">
+            <div class="book-cover"></div>
+            <div class="book-info">
+                <h3>Currently Reading</h3>
+                <p>Tên cuốn sách</p>
+                <div class="progress-bar"><div class="progress"></div></div>
+                <p style="font-size: 12px; margin-top: 5px;">60% hoàn thành</p>
+            </div>
+        </div>
     </div>
 
 </body>
